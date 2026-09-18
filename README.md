@@ -26,9 +26,47 @@ src/pages/                 index, posts/[...id], tags/index, tags/[tag], 404
 src/styles/global.css      design tokens and all component styles
 ```
 
-## Writing a post
+## Writing a post — the editor
 
-Add a Markdown file to `src/content/blog/`. The filename becomes the URL slug.
+```bash
+npm run write
+```
+
+Opens a writing tool at http://localhost:4322. Write Markdown on the left, see
+it styled as it will appear on the right, press **Publish**.
+
+The editor owns frontmatter entirely, so there is no YAML to write and no git
+commands to run.
+
+- **Preview** loads the blog's real `src/styles/global.css`, so type, spacing
+  and dark mode match the live site. Code blocks show without syntax colour —
+  that happens in the site's build, not in the browser.
+- **Autosave** writes your work to `src/content/blog/<slug>.md` with
+  `draft: true` about a second after you stop typing. It does not commit, and
+  the build already excludes drafts, so an unfinished post cannot go live.
+- **Publish** writes the post, runs the site build, and only then commits and
+  pushes to `main`. GitHub Actions takes it live about a minute later.
+
+Publishing fails loudly rather than quietly:
+
+| Situation | What happens |
+| --- | --- |
+| You are not on `main` | Refuses. Pushing a feature branch would look like it worked while deploying nothing. |
+| The build fails | Reports the error, commits nothing. Your file stays on disk to fix in place. |
+| The slug is taken | Refuses rather than overwriting a different post. |
+| The push is rejected | Says so. The commit stays on your machine — nothing is forced. |
+
+Editing a post that is already published adds an `updatedDate` and commits as
+`Update: <title>` instead of `Publish: <title>`.
+
+The tool lives in `tools/editor/`. It is separate from the site build on
+purpose: it cannot ship itself to the public site, and the site does not need to
+know it exists.
+
+## Writing a post by hand
+
+Still works, and is what the editor writes on your behalf. Add a Markdown file
+to `src/content/blog/`. The filename becomes the URL slug.
 
 ```markdown
 ---
@@ -55,12 +93,16 @@ Drafts stay visible under `npm run dev` and are excluded from `npm run build`.
 
 ## Commands
 
-| Command             | Does                                              |
-| ------------------- | ------------------------------------------------- |
-| `npm run dev`       | Dev server at `http://localhost:4321/blog/`        |
-| `npm run build`     | `astro check` then build into `dist/`              |
-| `npm run build:fast`| Build only, skipping type checking                 |
-| `npm run preview`   | Serve the built `dist/` — test the production output |
+| Command              | Does                                                 |
+| -------------------- | ---------------------------------------------------- |
+| `npm run write`      | Writing tool at `http://localhost:4322/`              |
+| `npm run test`       | Unit tests for the editor's parsing and slug logic    |
+| `npm run dev`        | Dev server at `http://localhost:4321/blog/`           |
+| `npm run build`      | `astro check` then build into `dist/`                 |
+| `npm run build:fast` | Build only, skipping type checking                    |
+| `npm run preview`    | Serve the built `dist/` — test the production output  |
+
+If port 4322 is busy: `PORT=4323 npm run write`.
 
 ## The base path
 
