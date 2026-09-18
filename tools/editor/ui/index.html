@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Writing — Titian's Notes</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <span class="bar-title">Titian's Notes</span>
+      <span class="status" id="status">Loading…</span>
+      <span class="bar-actions">
+        <button type="button" id="theme" class="btn btn-quiet" title="Toggle preview theme">
+          Preview theme
+        </button>
+        <button type="button" id="publish" class="btn btn-primary" disabled>Publish</button>
+      </span>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <button type="button" id="new" class="btn btn-wide">New post</button>
+        <ul class="posts" id="posts"></ul>
+      </aside>
+
+      <section class="editor">
+        <div class="fields">
+          <label class="field field-title">
+            <span>Title</span>
+            <input id="title" type="text" autocomplete="off" placeholder="Post title" />
+          </label>
+          <label class="field">
+            <span>Subtitle</span>
+            <input
+              id="description"
+              type="text"
+              autocomplete="off"
+              placeholder="One line, shown in the post list"
+            />
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>Slug</span>
+              <input id="slug" type="text" autocomplete="off" spellcheck="false" />
+            </label>
+            <label class="field field-narrow">
+              <span>Date</span>
+              <input id="pubDate" type="date" />
+            </label>
+            <label class="field">
+              <span>Tags, comma separated</span>
+              <input id="tags" type="text" autocomplete="off" placeholder="Meta, Reference" />
+            </label>
+          </div>
+        </div>
+
+        <textarea
+          id="body"
+          spellcheck="false"
+          placeholder="Write in Markdown.&#10;&#10;## A heading&#10;&#10;Body text."
+        ></textarea>
+
+        <p class="notice" id="notice" hidden></p>
+        <pre class="detail" id="detail" hidden></pre>
+      </section>
+
+      <section class="preview">
+        <iframe id="preview" title="Preview"></iframe>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
