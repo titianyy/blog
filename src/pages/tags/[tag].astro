@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPublishedPosts } from '../../utils/posts';
+import { buildTagIndex } from '../../utils/tags';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  // Built from published posts only, so no empty tag page is ever emitted.
+  return buildTagIndex(posts).map(({ slug, name, posts: tagged }) => ({
+    params: { tag: slug },
+    props: { name, tagged },
+  }));
+}
+
+const { name, tagged } = Astro.props;
+---
+
+<BaseLayout title={`Tagged “${name}”`} description={`Posts tagged ${name}`}>
+  <div class="page-header">
+    <h1 class="page-title">{name}</h1>
+    <p class="page-intro">
+      {tagged.length} {tagged.length === 1 ? 'post' : 'posts'}
+    </p>
+  </div>
+
+  <PostList posts={tagged} />
+</BaseLayout>

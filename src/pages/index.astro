@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import { getPublishedPosts } from '../utils/posts';
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout
+  title="Titian's Notes"
+  description="Research notes and essays"
+>
+  <div class="page-header">
+    <h1 class="page-title">Titian's Notes</h1>
+    <p class="page-intro">Research notes and essays</p>
+  </div>
+
+  <PostList posts={posts} />
+</BaseLayout>
